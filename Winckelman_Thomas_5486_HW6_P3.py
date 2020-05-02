@@ -119,9 +119,9 @@ def FEM4SL(p, r, f, n, a=0, b=np.pi, alpha=0, beta=0, quad_res=100, ReportProgre
         #
         #
     B = np.zeros(( 2, quad_res ))
-    GridforFEM = MakeB( B, a, b, quad_res, 2 )
-    B = np.zeros(( n+1, quad_res ))
-    GridforFEM = MakeB( B, a, b, quad_res, n )
+    GridforFEM = MakeB( B, a, b, quad_res, 2 )  # initialize for Numba's sake
+    B = np.zeros(( n+1, quad_res )) 
+    GridforFEM = MakeB( B, a, b, quad_res, n )  # stupidly, this appears to be the weakes link in the chain currently in terms of efficiency
     if ReportProgress:
         print(' ... ', end=' ')
     if isinstance(p, int):
@@ -197,9 +197,9 @@ def FEM4SL(p, r, f, n, a=0, b=np.pi, alpha=0, beta=0, quad_res=100, ReportProgre
     h = GridforFEM[1:] - GridforFEM[:len(GridforFEM)-1]
     # return g1, g2, g3, g4, h
     A = np.diag(g3)                     # hg1[i] corresponds to (h_{i+1}^(-2))int_{t[i+1]}^{t[i+2]} p(s) ds
-    CompleteTheCoefficientMatrix(A, n, h, g1, g4)
+    CompleteTheCoefficientMatrix(A, n, h, g1, g4)   # probably second weakest link in the chain in terms of efficiency
     b = g2
-    soln = np.linalg.solve(A,b)
+    soln = np.linalg.solve(A,b)     # probably third weakest link in the chain in terms of efficiency
     return soln, V, domain
 
 
@@ -227,7 +227,12 @@ temp = f(np.ones((2,2)))
 
 
 
-def temp(p, r, f, n=30, a=0, b=np.pi, quad_res=10, Plot=True, PlotBases=True):
+def temp(p, r, f, n=30, a=0, b=np.pi, quad_res=10, Plot=True, PlotBases=None):
+    if PlotBases is None:
+        if n>50:
+            PlotBases=False
+        else:
+            PlotBases=True
     soln, V, domain = FEM4SL(p, r, f, a=a, b=b, n=30, quad_res=10, ReportProgress=False)
     soln, V, domain = FEM4SL(p, r, f, a=a, b=b, n=30, quad_res=10, ReportProgress=False)
     soln, V, domain = FEM4SL(p, r, f,  a=a, b=b, n=n, quad_res=quad_res)
@@ -249,8 +254,8 @@ def temp(p, r, f, n=30, a=0, b=np.pi, quad_res=10, Plot=True, PlotBases=True):
 
 
 t = temp(p, 1, f, n=30)
-t = temp(p, 1, f, n=500)
-t = temp(p, 1, f, n=2000, PlotBases=False)
+t = temp(p, 1, f, n=500, PlotBases=True)
+t = temp(p, 1, f, n=2000)
 
 
 
