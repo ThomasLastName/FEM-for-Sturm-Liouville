@@ -121,7 +121,7 @@ def FEM4SL(p, r, f, n, a=0, b=np.pi, alpha=0, beta=0, quad_res=100, ReportProgre
     B = np.zeros(( 2, quad_res ))
     GridforFEM = MakeB( B, a, b, quad_res, 2 )  # initialize for Numba's sake
     B = np.zeros(( n+1, quad_res )) 
-    GridforFEM = MakeB( B, a, b, quad_res, n )  # stupidly, this appears to be the weakes link in the chain currently in terms of efficiency
+    GridforFEM = MakeB( B, a, b, quad_res, n )  # stupidly, this appears to be the weakest link in the chain currently in terms of efficiency
     if ReportProgress:
         print(' ... ', end=' ')
     if isinstance(p, int):
