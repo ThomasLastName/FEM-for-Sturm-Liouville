@@ -1,4 +1,4 @@
-# FEM-for-Sturn-Liouville
+# FEM-for-Sturm-Liouville
 Use FEM to approximate a solution to the Sturm-Liouville problem with homogeneous boundary conditions in the span of some pointy bois (https://en.wikipedia.org/wiki/Triangular_function).
 Slightly more information, though admittedly not a complete discussion, can be found in the corresponding writeup for the original problem (https://www.overleaf.com/read/wpbppmwyjnkw).
 The algorithm fails ocasionally, but when it does so it will not lead to false results, as it will fail spectacularly. If that happens, literally just restart it.
