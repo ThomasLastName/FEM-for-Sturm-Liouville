@@ -11,7 +11,6 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from tqdm import tqdm
 from numba import njit
 
 
@@ -111,8 +110,7 @@ def FEM4SL(p, r, f, n, a=0, b=np.pi, alpha=0, beta=0, quad_res=100, ReportProgre
         raise ValueError('Please make a<b.')
     if ReportProgress:
         print('')
-        print('Pre-Processing.')
-        print('')
+        print('    Now pre-Pprocessing', end=' ')
     if quad_res%2 == 0:
         quad_res += 1
         #
@@ -168,16 +166,14 @@ def FEM4SL(p, r, f, n, a=0, b=np.pi, alpha=0, beta=0, quad_res=100, ReportProgre
         #   for i=0,...,n compute the integrals int_{t[i]}^{t[i+1]}p(s)ds
         #   and for i=1,...,n compute the integrals int_{t[i]}^{t[i+1]}v_i(s)f(s)ds
         #
-        print('')
-        print('Now Computing Integrals.')
-        print('')
+        print('    Now Computing Integrals.')
     g1 = np.zeros(n+1)
     g2 = np.zeros(n)
     g3 = np.zeros(n)
     g4 = np.zeros(n-1)
     g1[0] = MySimpson( B[0], p[0] )
     if ReportProgress:
-        for j in tqdm(range(n)):
+        for j in range(n):
             g1[j+1] = MySimpson( B[j+1], p[j+1] )
             g2[j] = MySimpson( domain, b[j] )
             g3[j] = MySimpson( domain, MainDiagonal[j] )
@@ -191,8 +187,7 @@ def FEM4SL(p, r, f, n, a=0, b=np.pi, alpha=0, beta=0, quad_res=100, ReportProgre
             if j<n-1:
                 g4[j] = MySimpson( domain, OffDiagonal[j] )
     if ReportProgress:
-        print('')
-        print('Computation of integrals is complete.')
+        print('    Now post-processing.')
         print('')
         #
         #
@@ -253,8 +248,9 @@ def temp(p, r, f, n=30, a=0, b=np.pi, quad_res=10, Plot=True, PlotBases=True):
 
 
 
-t = temp(p, 1, f)
-t = temp(p, 1, f, 500)
+t = temp(p, 1, f, n=30)
+t = temp(p, 1, f, n=500)
+t = temp(p, 1, f, n=2000, PlotBases=False)
 
 
 
